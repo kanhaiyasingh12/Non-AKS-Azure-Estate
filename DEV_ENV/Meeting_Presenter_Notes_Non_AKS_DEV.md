@@ -74,90 +74,13 @@ Without Terraform management:
 
 ---
 
-# 4. Finding #2 – Service Bus Dead-Letter Queue Backlog
+# 4. Finding #2 – Container Health Probes
 
-## 4.1 What I Reviewed
-
-> I reviewed the messaging layer across the DEV Service Bus namespaces to verify message processing health and identify bottlenecks.
-
-## 4.2 What I Found
-
-> I uncovered a massive, permanent backlog of dead-lettered messages silently accumulating in our DEV Service Bus.
-
-### Current Backlog (in `helios-knowledgegraph-events` topic)
-
-- Subscription `kg-event-processor` → **18,169 dead-lettered messages**
-- Secondary Queue `dml-processor-dlq` → **17,411 active messages** sitting unprocessed.
-
-## 4.3 What Does This Mean?
-
-> Azure Service Bus is attempting to retry failed messages up to a Maximum Delivery Count of **50 attempts**, holding a lock for 5 minutes each time.
->
-> Because dead-letter message expiration (`DeadLetteringOnMessageExpiration`) is set to False, these 18,169 messages failed 50 times and are now permanently stuck, consuming roughly 27.8 MB of namespace quota.
-
-## 4.4 Why Is This Important?
-
-> This is a massive blind spot for our data ingestion pipeline.
-
-Potential impact:
-- True business events (like Knowledge Graph DML mutations) are failing and being permanently lost.
-- Downstream systems are missing important updates due to schema parsing errors or timeouts.
-- The sheer volume of old failures hides any new, critical production issues that might arise today.
-
-## 4.5 Recommendation
-
-> We cannot blindly delete 18,000+ messages, as they represent dropped business events.
-
----
-
-# 5. Finding #3 – Duplicate UUDRI Environment
-
-## 5.1 What I Found
-
-> While mapping the architecture, I identified what looked like redundant infrastructure for the UUDRI (Utility Usage Data & Rate Intelligence) system.
->
-> Tracing the deployment repositories, branches, and ownership revealed two completely separate, parallel stacks running simultaneously.
-
-## 5.2 Personal Development Stack
-
-### Resource Group: `uudri-dev-rg`
-
-- **Frontend:** SWA `white-coast` (tracking `develop` branch)
-- **Backend:** App Service `UUDRI-App-Service-dev-01`
-- **Ownership:** Tagged to an individual personal email (`divyanshu.arya@...`)
-- **Storage/DB:** Uses isolated Blob containers and Postgres connections.
-
-## 5.3 Shared Team Environment
-
-### Resource Group: `helios-dev-us-west3-rg`
-
-- **Frontend:** SWA `thankful-mud` (tracking `helios-develop` branch)
-- **Backend:** App Service `UUDRI-Foundry-App-Service-dev-01`
-- **Ownership:** Tagged correctly to `DevOps`
-- **Storage/DB:** Uses a separate set of storage resources, causing data fragmentation.
-
-## 5.4 Why Is This Important?
-
-> Running dual stacks creates severe data fragmentation and operational confusion.
-
-Potential issues:
-- Developers testing on the personal stack are hitting different databases than those on the team stack.
-- Unnecessary compute costs from duplicating App Services, Storage Accounts, and Key Vaults.
-- No single source of truth for the UUDRI system in DEV.
-
-## 5.5 Recommendation
-
-> We must standardize all UUDRI development onto the shared DevOps-managed environment.
-
----
-
-# 6. Finding #4 – Container Health Probes
-
-## 6.1 Resource
+## 4.1 Resource
 
 `ca-model-service-dev`
 
-## 6.2 What I Found
+## 4.2 What I Found
 
 > This Container App hosts our GPT-4.1 inference workload, but it currently has **zero health probes** configured.
 
@@ -167,18 +90,97 @@ Potential issues:
 - Readiness Probe
 - Liveness Probe
 
-## 6.3 Why Does This Matter?
+## 4.3 Why Does This Matter?
 
 > Health probes tell Azure when a container is booted, ready to take traffic, and still healthy. Without them, Azure blindly routes traffic during slow cold-starts. This is critical because LLM inference requests can easily exceed 30 seconds.
 
-## 6.4 Potential Impact
+## 4.4 Potential Impact
 
 - Azure gives up during cold starts and returns **502 Bad Gateway / 504 Gateway Timeout** errors to the caller.
 
-## 6.5 Recommendation
+## 4.5 Recommendation
 
 - Add a dedicated Startup Probe with a generous initial delay (e.g., 30s).
 - Add a lightweight `/health` Readiness Probe in a new container revision so Azure knows exactly when it is safe to route traffic.
+
+---
+
+
+# 5. Finding #3 – Service Bus Dead-Letter Queue Backlog
+
+## 5.1 What I Reviewed
+
+> I reviewed the messaging layer across the DEV Service Bus namespaces to verify message processing health and identify bottlenecks.
+
+## 5.2 What I Found
+
+> I uncovered a massive, permanent backlog of dead-lettered messages silently accumulating in our DEV Service Bus.
+
+### Current Backlog (in `helios-knowledgegraph-events` topic)
+
+- Subscription `kg-event-processor` → **18,169 dead-lettered messages**
+- Secondary Queue `dml-processor-dlq` → **17,411 active messages** sitting unprocessed.
+
+## 5.3 What Does This Mean?
+
+> Azure Service Bus is attempting to retry failed messages up to a Maximum Delivery Count of **50 attempts**, holding a lock for 5 minutes each time.
+>
+> Because dead-letter message expiration (`DeadLetteringOnMessageExpiration`) is set to False, these 18,169 messages failed 50 times and are now permanently stuck, consuming roughly 27.8 MB of namespace quota.
+
+## 5.4 Why Is This Important?
+
+> This is a massive blind spot for our data ingestion pipeline.
+
+Potential impact:
+- True business events (like Knowledge Graph DML mutations) are failing and being permanently lost.
+- Downstream systems are missing important updates due to schema parsing errors or timeouts.
+- The sheer volume of old failures hides any new, critical production issues that might arise today.
+
+## 5.5 Recommendation
+
+> We cannot blindly delete 18,000+ messages, as they represent dropped business events.
+
+---
+
+
+# 6. Finding #4 – Duplicate UUDRI Environment
+
+## 6.1 What I Found
+
+> While mapping the architecture, I identified what looked like redundant infrastructure for the UUDRI (Utility Usage Data & Rate Intelligence) system.
+>
+> Tracing the deployment repositories, branches, and ownership revealed two completely separate, parallel stacks running simultaneously.
+
+## 6.2 Personal Development Stack
+
+### Resource Group: `uudri-dev-rg`
+
+- **Frontend:** SWA `white-coast` (tracking `develop` branch)
+- **Backend:** App Service `UUDRI-App-Service-dev-01`
+- **Ownership:** Tagged to an individual personal email (`divyanshu.arya@...`)
+- **Storage/DB:** Uses isolated Blob containers and Postgres connections.
+
+## 6.3 Shared Team Environment
+
+### Resource Group: `helios-dev-us-west3-rg`
+
+- **Frontend:** SWA `thankful-mud` (tracking `helios-develop` branch)
+- **Backend:** App Service `UUDRI-Foundry-App-Service-dev-01`
+- **Ownership:** Tagged correctly to `DevOps`
+- **Storage/DB:** Uses a separate set of storage resources, causing data fragmentation.
+
+## 6.4 Why Is This Important?
+
+> Running dual stacks creates severe data fragmentation and operational confusion.
+
+Potential issues:
+- Developers testing on the personal stack are hitting different databases than those on the team stack.
+- Unnecessary compute costs from duplicating App Services, Storage Accounts, and Key Vaults.
+- No single source of truth for the UUDRI system in DEV.
+
+## 6.5 Recommendation
+
+> We must standardize all UUDRI development onto the shared DevOps-managed environment.
 
 ---
 
