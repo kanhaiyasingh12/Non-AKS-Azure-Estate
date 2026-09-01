@@ -6,9 +6,15 @@
 
 ### Opening Statement
 
-> "I have completed the comprehensive SRE discovery of the Helios QA Non-AKS Estate. While the environment is significantly more consolidated than DEV (16 resources vs. 37), I discovered **two critical blockers** that currently break QA workflows: two SOP Factory microservices are running generic Microsoft 'Hello World' placeholder images on mismatched ports (8090/8091 vs 80), causing 100% request failures. 
+> "I have completed the detailed SRE discovery for the Helios QA Non-AKS Estate. The environment is more organized than DEV (16 resources vs. 37).
+
+> I found two critical issues that break QA workflows:
+
+>  two SOP Factory microservices are running placeholder Microsoft "Hello World" images on the mismatch ports (8090/8091 instead of 80), causing all requests to fail. 
 > 
-> Additionally, a failed Container App Environment has been orphaned since June, Service Bus has accumulated over **31,000 dead-lettered messages**, and **15 out of 16 resources are running completely dark** with zero diagnostic settings.
+> Additionally, a failed Container App Environment has been orphaned since June.
+
+>Service Bus has accumulated over **31,000 dead-lettered messages**, and **15 out of 16 resources are running completely dark** with zero diagnostic settings.
 
 ---
 
@@ -45,7 +51,7 @@
 
 ## 3.2 What I Found
 
-> I investigated the root cause behind the continuous P3 failures reported daily in the `#daily-qre-report` Slack alerts.
+> I found when i investigated the root cause behind the continuous P3 failures reported daily in the `#daily-qre-report` Slack alerts.
 > 
 > Terraform initialized these two SOP Factory microservices with Microsoft's default "Hello World" placeholder image, which listens exclusively on Port 80. However, Azure ingress is routing traffic to ports 8090 and 8091.
 
@@ -75,7 +81,7 @@
 
 ## 4.2 What I Found
 
-> The Service Bus has accumulated over **31,510 dead-lettered messages**.
+>  I found that the Service Bus has accumulated over **31,510 dead-lettered messages**.
 
 ### Current Backlog
 
