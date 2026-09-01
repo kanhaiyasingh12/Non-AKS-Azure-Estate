@@ -7,7 +7,7 @@
 
 ###  Opening Statement
 
-> I completed the discovery of the remaining Non-AKS Azure compute estate in the DEV environment.
+> I completed the discovery of Non-AKS Azure compute estate in the DEV environment.
 > In total, I Found 37 Non-AKS compute resources across 10 Resource Groups to build a validated baseline.
 
 >
