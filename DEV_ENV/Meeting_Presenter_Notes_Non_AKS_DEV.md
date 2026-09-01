@@ -9,7 +9,7 @@
 
 > I completed the discovery of the remaining Non-AKS Azure compute estate in the DEV environment.
 > In total, I Found 37 Non-AKS compute resources across 10 Resource Groups to build a validated baseline.
-> 8/3 means = 8 resource acrros 3 env  DEV, QA, PROD
+
 >
 > The Method (Our SRE Principle): I follow a strict, standardized pipeline: DISCOVER ➔ VERIFY ➔ SAVE EVIDENCE ➔ MAP ARCHITECTURE ➔ EXPLAIN CURRENT STATE ➔ IDENTIFY GAPS ➔ GET DECISION ➔ IMPLEMENT LATER
 
@@ -21,7 +21,7 @@
 
 > I validated the current inventory against the previous baseline.
 >
-> The 8/3 reported **47 Azure compute resources**. After validating the subscription, I confirmed the inventory as **10 Azure Function Apps and 37 Non-AKS Azure compute resources**, distributed across **10 Resource Groups**.
+> The 8/3 reported (8/3 means = 8 resource acrros 3 env  DEV, QA, PROD) **47 Azure compute resources**. After validating the subscription, I confirmed the inventory as **10 Azure Function Apps and 37 Non-AKS Azure compute resources**, distributed across **10 Resource Groups**.
 
 ## 2.2 Resource Breakdown
 
