@@ -631,5 +631,3 @@ Based on DEV findings across the 37 Non-AKS resources, the SRE Release Orchestra
 | **Reporting / audit** | **Partial** | 15 of 37 resources are IaC-tagged and Terraform-managed (`iac-coverage-DEV.csv`). 22 resources are unmanaged or lack ownership metadata. All 13 Managed Identities and 26 Private Endpoints are fully mapped in audit logs. |
 
 ---
-
-*Evidence verified and recorded by SRE team. No remediation or implementation changes have been performed during this discovery phase.*
