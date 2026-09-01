@@ -7,8 +7,9 @@
 
 ###  Opening Statement
 
-> Hi everyone. I completed the discovery of the remaining Non-AKS Azure compute estate in the DEV environment.
-> In total, we assessed 37 Non-AKS compute resources across 10 Resource Groups to build a validated baseline.
+> I completed the discovery of the remaining Non-AKS Azure compute estate in the DEV environment.
+> In total, I Found 37 Non-AKS compute resources across 10 Resource Groups to build a validated baseline.
+> 8/3 means = 8 resource acrros 3 env  DEV, QA, PROD
 >
 > The Method (Our SRE Principle): I follow a strict, standardized pipeline: DISCOVER ➔ VERIFY ➔ SAVE EVIDENCE ➔ MAP ARCHITECTURE ➔ EXPLAIN CURRENT STATE ➔ IDENTIFY GAPS ➔ GET DECISION ➔ IMPLEMENT LATER
 
