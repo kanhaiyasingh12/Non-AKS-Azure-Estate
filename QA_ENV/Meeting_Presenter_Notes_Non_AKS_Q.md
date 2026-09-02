@@ -82,7 +82,7 @@
 ## 4.2 What I Found
 
 >  I found that the Service Bus has accumulated over **31,510 dead-lettered messages**.
-
+> Maurice also addressed this issues on ticket no 24673 
 ### Current Backlog
 
 - Topic `helios-knowledgegraph-events` / Sub `kg-event-processor`: **31,102 dead-lettered messages**
