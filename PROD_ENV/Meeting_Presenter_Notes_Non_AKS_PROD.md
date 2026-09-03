@@ -3,17 +3,17 @@
 
 # If senior told 2 minute breif summary
 
-> Hi everyone. I’ve finished our SRE discovery of the 11 Non-AKS resources in PROD.
+> Hi Team. I have completed our SRE discovery. There are 11 Non-AKS resources in PROD.
 
 > our deployments are clean and our message queues are perfectly healthy.
 
-> However, I are currently flying blind in production due to three critical gaps:
+> However, We are currently blind spot in production due to three critical gaps:
 
-> The Silent Failure: The GitHub Activity Logger has been crashed for nearly a month, but our alert dashboard shows it as green because the metric alert is flawed. It’s 100% down, but the alarm isn't ringing.
+> 1 **The Silent Failure:** The GitHub Activity Logger has been crashed for with in a month, but our alert dashboard shows it as green because the metric alert is flawed. It is completely down, but no alarm is going off.
 
->Zero Synthetic Monitoring: We have no automated ping tests on our live customer-facing domains. If a portal goes down, we won’t know until a customer complains.
+> 2 **Zero Synthetic Monitoring:** We have no automated ping tests on our live customer-facing domains. If a portal goes down, we won’t know until a customer complains.
 
-> No Autoscaling: Our containers are locked to static capacity. If traffic spikes, they will throttle and fail instead of scaling up.
+> 3 **No Autoscaling:** Our containers are locked to static capacity. If traffic spikes, they will throttle and fail instead of scaling up.
 
 
 ---
@@ -34,7 +34,6 @@
 
 > Third, the one failing PROD resource in our daily QRE report represents a 'silent alert' blind spot where a permanent host crash stays green.
 
-> I have formulated a 3-phase remediation plan to eliminate these blind spots and harden production."
 
 ---
 
